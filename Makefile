@@ -23,11 +23,17 @@
 #    -g           ==> keep additional information to aid in debugging
 #    -o           ==> specify the output filename
 #    -c           ==> compile only (create a .o file)
-split: split.o
-	g++ -std=c++11 -Wall -pedantic -g -o split split.o
+srann: ann.o node.o main.o
+	g++ -std=c++11 -Wall -pedantic -g -o srann ann.o node.o main.o
 
-split.o: split.cpp
-	g++ -std=c++11 -Wall -pedantic -g -c split.cpp
+main.o: ANN.h main.cpp
+	g++ -std=c++11 -Wall -pedantic -g -c main.cpp
+
+ann.o: ANN.h Node.h ANN.cpp
+	g++ -std=c++11 -Wall -pedantic -g -c ANN.cpp
+
+node.o: Node.h Node.cpp
+	g++ -std=c++11 -Wall -pedantic -g -c Node.cpp
 
 clean:
-	rm -f split split.exe split.o
+	rm -f srann srann.exe main.o ann.o node.o

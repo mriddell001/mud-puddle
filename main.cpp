@@ -1,69 +1,39 @@
-<<<<<<< HEAD
+/*
+Filename: main.cpp
+Name: Matthew Riddell-Ide
+Contents: This file contains the main functions of control for the SRANN.
+*/
 #include <fstream>
-#include <iostream>
-#include <string>
-#include <stdlib.h>
-#include <vector>
-#include "Node.h"
-//#include "bmp.h"
+#include "ANN.h"
 
-using namespace std;
+/**
+ * main - This function accepts user input in the form of command line arguments
+ *        to read three files. The first being the setup instructions for the
+ *        neural network. This includes a flag for network type (default values
+ *        vs. calculated values) the size of the input layer, the output layer,
+ *        the number of hidden layers and their respective size.
+ *
+ *        The second being the test cases. This file should be kept in memory
+ *        for testing and training purposes. The file format starts with two int
+ *        values that indicate the number of true and false test cases. Each
+ *        case will have a length of the input layer and the output layer.
+ *
+ *        The third being the instruction set. This file defines how the SRANN
+ *        is trained and what actions are to be taken by the network.
+ * @param {INT} argc - Number of arguments.
+ * @param {CHAR} argv - An array containing the arguments.
+ * @returns {INT} - returns value of zero on sucessful exit.
+ */
+int main(int argc, char const *argv[]) {
+  std::ifstream input_stream (argv[1], std::ifstream::in);
 
-int main(int argc, char *argv[])
-{
-    Node node;
+  int one=0, two=0, three=0, four=0;
+  if (input_stream.is_open()) {
+    input_stream >> one >> two >> three >> four;
+  }
 
-    string tmp;
-    double data = 0.0;
-    int dat = 0;
-    int layer = 0;
+  ANN ann = ANN(one, two, three, four);
 
-    /** Input Source **/
-    //  Expects a text file with input data in the form:
-    //  0.9 : Pixel is on.
-    //  0.1 : Pixel is off.
 
-    ifstream in_file(argv[1], ios::in);
-    while (in_file >> data) {
-        node.Prime_input_vector(data);
-    }
-    /** Completed Input **/
-
-    /** Prime Hidden Layers **/
-    //  Expects a text file with integers representing
-    //  the number of nodes in each hidden layer.
-
-    ifstream h_file(argv[2], ios::in);
-    while (h_file >> dat) {
-        node.Prime_hidden_layers(dat, layer);
-        layer++;
-    }
-    /** Completed Hidden Layers **/
-
-    /** Output Source**/
-    //  Expects a text file with output node layer data
-    //  including size of output and initial weight.
-
-    ifstream o_file(argv[3], ios::in);
-    while (o_file >> data) {
-        node.Prime_output_vector(data);
-    }
-    /** Completed Output **/
-
-    ifstream c_file(argv[4], ios::in);
-    while (c_file >> data) {
-        node.Prime_class_label(data);
-    }
-
-    node.Connect_layers();
-
-    for (int i = 0; i < 10000; i++) {
-        node.Calculate_layers();
-        //node.Print_layers();
-        node.Euclidean_distance();
-        node.Calculate_error();
-        node.Propagate_error();
-    }
-
-    return 0;
+  return 0;
 }
