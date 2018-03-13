@@ -7,7 +7,7 @@
 class Node {
 public:
   Node(){
-    m_weight = 0.5;
+    m_weight = 0.01;
   };
   ~Node();
 
