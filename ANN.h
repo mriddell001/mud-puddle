@@ -19,12 +19,13 @@ Functions:
 
 class ANN {
 public:
-  ANN(int one, int two, int three, int four);
+  ANN(int in[4]);
   ~ANN();
+private:
+  void init();
 
-  std::vector<Node*> m_input_nodes;       //Pointers to nodes in next layer.
-  std::vector<Node*> m_hidden_nodes;       //Pointers to nodes in next layer.
-  std::vector<Node*> m_output_nodes;       //Pointers to nodes in next layer.
+  std::vector<Node*> ann_i;
+  std::vector<Node*> ann_o;
   int m_input_size;
   int m_hidden_layers;
   int m_hidden_size;

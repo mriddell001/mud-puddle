@@ -26,13 +26,15 @@ Contents: This file contains the main functions of control for the SRANN.
  */
 int main(int argc, char const *argv[]) {
   std::ifstream input_stream (argv[1], std::ifstream::in);
+  std::ifstream test_stream (argv[2], std::ifstream::in);
+  std::ifstream instruction_stream (argv[3], std::ifstream::in);
 
-  int one=0, two=0, three=0, four=0;
+  int nn_input[4];
   if (input_stream.is_open()) {
-    input_stream >> one >> two >> three >> four;
+    input_stream >> nn_input[0] >> nn_input[1] >> nn_input[2] >> nn_input[3];
   }
 
-  ANN ann = ANN(one, two, three, four);
+  ANN ann = ANN(nn_input);
 
 
   return 0;

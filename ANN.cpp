@@ -15,35 +15,78 @@ Functions:
 
 using namespace std;
 
-ANN::ANN(int one, int two, int three, int four)
+ANN::ANN(int in[4])
 {
-  m_input_size = one;
-  m_hidden_layers = two;
-  m_hidden_size = three;
-  m_output_size = four;
+  m_input_size = in[0];
+  m_hidden_layers = in[1];
+  m_hidden_size = in[2];
+  m_output_size = in[3];
 
-  for (int i = 0; i < m_output_size; i++) {
-    Node* node = new Node(2);
-    m_output_nodes.push_back(node);
-  }
-
-  for (int i = 0; i < m_hidden_layers; i++) {
-    for (int j = 0; j < m_hidden_size; j++) {
-      Node* node = new Node(1);
-      m_hidden_nodes.push_back(node);
-    }
-  }
-
-  for (int i = 0; i < m_input_size; i++) {
-    Node* node = new Node(0);
-    m_input_nodes.push_back(node);
-  }
-
-
-
+  init();
 }
 
 ANN::~ANN()
 {
 
+}
+
+/**
+ * init - This function serves to initialize the nodes in the ANN. This version
+ *        is the primative version. Ultimately, this should be able to use
+ *        recursion to automatically set every value.
+ *
+ * Assumptions: On start, this function assumes there are valid values for the
+ * size of the layers and number of layers. On finish, it is to be assumed that
+ * the ANN has been completely initialized and the input & output layers are set
+ * and can be accessed.
+ *
+ * Testing status: Untested.
+ */
+void ANN::init() {
+  Node *tmp, *m_parent;
+  int a, b, c, d;
+  a = m_input_size;
+  b = m_hidden_size;
+  c = m_output_size;
+  d = m_hidden_layers;
+
+  //Init Input Nodes
+  for (int i = 0; i < a; i++) {
+    tmp = new Node();
+    tmp->m_parent = NULL;
+    ann_i.push_back(tmp);
+  }
+
+  m_parent = ann_i[0];
+
+  //For each layer in the ANN.
+  for (int i = 0; i < d+1; i++) {
+    int l, m;
+
+    if (!i) {l = b;m = a;}
+    else if (i == d) {l = c;m = b;}
+    else {l = m = b;}
+
+    //For each node in the next layer.
+    for (int j = 0; j < l; j++) {
+      tmp = new Node();
+      //For each node in the current layer.
+      for (int k = 0; k < m; k++) {
+        if (i) {
+          tmp->m_parent = m_parent->m_edges[0];
+          m_parent->m_edges[k]->m_edges.push_back(tmp);
+          m_parent->m_edges[k]->m_edgeWeight.push_back(0.5);
+          if (i == d) {
+            ann_o.push_back(tmp);
+          }
+        }
+        else {
+          tmp->m_parent = ann_i[0];
+          ann_i[k]->m_edges.push_back(tmp);
+          ann_i[k]->m_edgeWeight.push_back(0.5);
+        }
+      }
+    }
+    m_parent = m_parent->m_edges[0];
+  }
 }
