@@ -14,6 +14,7 @@ Functions:
 #ifndef ANN_H
 #define ANN_H
 
+#include <iostream>
 #include <vector>
 #include "Node.h"
 
@@ -21,11 +22,13 @@ class ANN {
 public:
   ANN(int in[4]);
   ~ANN();
+  bool prime_input(std::istream &stream);
 private:
-  void init();
+  bool init();
 
-  std::vector<Node*> ann_i;
-  std::vector<Node*> ann_o;
+  std::vector<Node*> ann_i;   //Vector of input nodes.
+  std::vector<Node*> ann_h;   //Vector of hidden nodes.
+  std::vector<Node*> ann_o;   //Vector of output nodes.
   int m_input_size;
   int m_hidden_layers;
   int m_hidden_size;

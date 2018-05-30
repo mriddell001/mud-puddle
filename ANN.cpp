@@ -22,7 +22,10 @@ ANN::ANN(int in[4])
   m_hidden_size = in[2];
   m_output_size = in[3];
 
-  init();
+  bool init_success = init();
+  if(!init_success) {
+    cout << "There has been a problem with the init function.\n";
+  }
 }
 
 ANN::~ANN()
@@ -36,57 +39,66 @@ ANN::~ANN()
  *        recursion to automatically set every value.
  *
  * Assumptions: On start, this function assumes there are valid values for the
- * size of the layers and number of layers. On finish, it is to be assumed that
- * the ANN has been completely initialized and the input & output layers are set
- * and can be accessed.
+ * size of the layers and number of layers. It also assumes each hidden layer is
+ * of equal size. On finish, it is to be assumed that the ANN has been
+ * completely initialized and the input & output layers are set and can be
+ * accessed.
  *
  * Testing status: Untested.
  */
-void ANN::init() {
-  Node *tmp, *m_parent;
-  int a, b, c, d;
-  a = m_input_size;
-  b = m_hidden_size;
-  c = m_output_size;
-  d = m_hidden_layers;
+bool ANN::init() {
+  Node *tmp, *pmt;
+  int a = m_input_size, b = m_hidden_size, c = m_output_size, d = m_hidden_layers;
 
-  //Init Input Nodes
+  //Initialize Input Nodes
   for (int i = 0; i < a; i++) {
     tmp = new Node();
-    tmp->m_parent = NULL;
     ann_i.push_back(tmp);
   }
 
-  m_parent = ann_i[0];
-
   //For each layer in the ANN.
-  for (int i = 0; i < d+1; i++) {
-    int l, m;
-
-    if (!i) {l = b;m = a;}
-    else if (i == d) {l = c;m = b;}
-    else {l = m = b;}
-
-    //For each node in the next layer.
-    for (int j = 0; j < l; j++) {
+  for (int i = 0; i < d; i++) {
+    //For each node in each layer.
+    for (int j = 0; j < b; j++) {
       tmp = new Node();
-      //For each node in the current layer.
-      for (int k = 0; k < m; k++) {
-        if (i) {
-          tmp->m_parent = m_parent->m_edges[0];
-          m_parent->m_edges[k]->m_edges.push_back(tmp);
-          m_parent->m_edges[k]->m_edgeWeight.push_back(0.5);
-          if (i == d) {
-            ann_o.push_back(tmp);
-          }
+      ann_h.push_back(tmp);
+      if (i) {
+        int l = (i - 1) * b;
+        for (int k = 0; k < b; k++) {
+          pmt = ann_h[l+k];
+          (*pmt).m_edges.push_back(tmp);
+          (*pmt).m_edgeWeight.push_back(0.5);
         }
-        else {
-          tmp->m_parent = ann_i[0];
-          ann_i[k]->m_edges.push_back(tmp);
-          ann_i[k]->m_edgeWeight.push_back(0.5);
+      }
+      else {
+        //This is for connecting the input layer to the first hidden layer.
+        for (vector<Node*>::iterator it = ann_i.begin() ; it != ann_i.end(); ++it) {
+          (*it)->m_edges.push_back(tmp);
+          (*it)->m_edgeWeight.push_back(0.5);
         }
       }
     }
-    m_parent = m_parent->m_edges[0];
   }
+
+  //This creates and connects the output layer to the last hidden layer.
+  int l = (d*b)-b;
+  for (int i = 0; i < c; i++) {
+    tmp = new Node();
+    ann_o.push_back(tmp);
+    for (int j = 0; j < b; j++) {
+      pmt = ann_h[l+j];
+      (*pmt).m_edges.push_back(tmp);
+      (*pmt).m_edgeWeight.push_back(0.5);
+    }
+  }
+  return true;
+}
+
+bool ANN::prime_input(istream &stream) {
+  double tmp;
+  for (vector<Node*>::iterator it = ann_i.begin() ; it != ann_i.end(); ++it) {
+    stream >> tmp;
+    (*it)->m_weight = tmp;
+  }
+  return true;
 }

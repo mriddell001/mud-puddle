@@ -4,6 +4,8 @@ Name: Matthew Riddell-Ide
 Contents: This file contains the main functions of control for the SRANN.
 */
 #include <fstream>
+#include <string>
+#include <vector>
 #include "ANN.h"
 
 /**
@@ -48,7 +50,8 @@ int main(int argc, char const *argv[]) {
   std::ifstream instruction_stream (argv[3], std::ifstream::in);
 
   int nn_input[4];
-  int input_flag, t_true, t_false;
+  int command, input_flag, tests;
+  std::vector<std::string> file_names;
 
   if (input_stream.is_open()) {
     input_stream >> input_flag;
@@ -58,12 +61,40 @@ int main(int argc, char const *argv[]) {
     else {
       input_stream >> nn_input[0] >> nn_input[1] >> nn_input[2] >> nn_input[3];
     }
+    input_stream.close();
   }
 
   ANN ann = ANN(nn_input);
 
   if (test_stream.is_open()) {
-    test_stream >> t_true >> t_false;
+    test_stream >> tests;
+    for (int i = 0; i < tests; i++) {
+      std::string tmp = "";
+      test_stream >> tmp;
+      file_names.push_back(tmp);
+    }
+    test_stream.close();
+  }
+
+  if (instruction_stream.is_open()) {
+    while (instruction_stream >> command) {
+      //Case 0: Random True Test.
+      //Case 1: Random False Test.
+      switch (command) {
+        case 0:   //Random True Test
+        {
+          break;
+        }
+        case 1:   //Random False Test
+        {
+          break;
+        }
+        case 2:   //Print Euclidean Distance to Screen
+        {
+          break;
+        }
+      }
+    }
   }
 
 
