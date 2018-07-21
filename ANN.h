@@ -15,16 +15,18 @@ Functions:
 #define ANN_H
 
 #include <iostream>
-#include <vector>
 #include "Node.h"
 
 class ANN {
 public:
   ANN(int in[4]);
   ~ANN();
-  bool prime_input(std::istream &stream);
+  void auto_refine(std::istream &stream);
+  void testing_handler(std::istream &stream);
+
 private:
   bool init();
+  bool prime_input(std::istream &stream);
 
   std::vector<Node*> ann_i;   //Vector of input nodes.
   std::vector<Node*> ann_h;   //Vector of hidden nodes.

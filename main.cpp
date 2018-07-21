@@ -78,18 +78,16 @@ int main(int argc, char const *argv[]) {
 
   if (instruction_stream.is_open()) {
     while (instruction_stream >> command) {
-      //Case 0: Random True Test.
-      //Case 1: Random False Test.
       switch (command) {
-        case 0:   //Random True Test
+        case 0:   //Random Test
         {
           break;
         }
-        case 1:   //Random False Test
+        case 1:   //Print Euclidean Distance to Screen
         {
           break;
         }
-        case 2:   //Print Euclidean Distance to Screen
+        case 2:   //Print ANN to File
         {
           break;
         }
