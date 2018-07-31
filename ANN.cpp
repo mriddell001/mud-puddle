@@ -73,12 +73,21 @@ bool ANN::init() {
   int a = m_input_size, b = m_hidden_size,
       c = m_output_size, d = m_hidden_layers;
 
+  input_layer_creation(a);
+  hidden_layer_creation(b,d);
+  output_layer_creation(b,c,d);
+  return true;
+}
+
+void ANN::input_layer_creation(int a) {
   ///For each node in the input layer.
   for (int i = 0; i < a; i++) {
     tmp = new Node();
     ann_i.push_back(tmp);
   }
+}
 
+void ANN::hidden_layer_creation(int b, int d) {
   //For each hidden layers.
   for (int i = 0; i < d; i++) {
     ///For each node in a hidden layer.
@@ -87,9 +96,8 @@ bool ANN::init() {
       ann_h.push_back(tmp);
       if (i) {
         int l = (i - 1) * b;
-        ///For each node in a hidden layer.
-        ///Add the newly created node to the vector of edges
-        ///of the previous layer.
+        ///For each node in a hidden layer, add the newly created node to the
+        ///vector of edges of the previous layer.
         for (int k = 0; k < b; k++) {
           pmt = ann_h[l+k];
           (*pmt).m_edges.push_back(tmp);
@@ -97,8 +105,8 @@ bool ANN::init() {
         }
       }
       else {
-        ///For each node in the input layer.
-        ///Add the newly created node to the vector of edges.
+        ///For each node in the input layer, add the newly created node to the
+        ///vector of edges.
         for (vector<Node*>::iterator it = ann_i.begin() ; it != ann_i.end(); ++it) {
           (*it)->m_edges.push_back(tmp);
           (*it)->m_edgeWeight.push_back(0.5);
@@ -106,7 +114,9 @@ bool ANN::init() {
       }
     }
   }
+}
 
+void ANN::output_layer_creation(int b, int c, int d) {
   int l = (d*b)-b;
   ///For each node in the output layer.
   for (int i = 0; i < c; i++) {
@@ -119,8 +129,8 @@ bool ANN::init() {
       (*pmt).m_edgeWeight.push_back(0.5);
     }
   }
-  return true;
 }
+
 
 /**
  * testing_handler - This function serves as a centeral location to run batches

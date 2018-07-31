@@ -27,6 +27,9 @@ public:
 private:
   bool init();
   bool prime_input(std::istream &stream);
+  void input_layer_creation(int a);
+  void hidden_layer_creation(int b, int d);
+  void output_layer_creation(int b, int c, int d);
 
   std::vector<Node*> ann_i;   //Vector of input nodes.
   std::vector<Node*> ann_h;   //Vector of hidden nodes.
